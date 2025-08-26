@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 1
+names: ['keyboard']
+
+roboflow:
+  workspace: azmilutfiproject
+  project: computer-keyboard-s7pym
+  version: 3
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/azmilutfiproject/computer-keyboard-s7pym/dataset/3
