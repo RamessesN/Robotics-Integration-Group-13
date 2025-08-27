@@ -1,11 +1,11 @@
 import cv2
 from ultralytics import YOLO
-from env_config import CAN_DATA_YAML, CAN_BEST_MODEL_PATH, DEVICE
+from env_config import MOUSE_DATA_YAML, MOUSE_BEST_MODEL_PATH, DEVICE
 
 def validate_model():
     print("Checking model Performance...")
-    model = YOLO(CAN_BEST_MODEL_PATH)
-    metrics = model.val(data = CAN_DATA_YAML, device = DEVICE)
+    model = YOLO(MOUSE_BEST_MODEL_PATH)
+    metrics = model.val(data = MOUSE_DATA_YAML, device = DEVICE)
     print(f"Results: mAP50: {metrics.box.map50:.3f}, mAP50-95: {metrics.box.map:.3f}")
     return model
 
