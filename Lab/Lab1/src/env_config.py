@@ -2,10 +2,10 @@ import os
 import torch
 
 # dataset
-MOUSE_DATASET_PATH = "../dataset/mouse"
-KEYBOARD_DATASET_PATH = "../dataset/keyboard"
-CAN_DATASET_PATH = "../dataset/can"
-COMBINED_DATASET_PATH = "../dataset/combined"
+MOUSE_DATASET_PATH: str = "../dataset/mouse"
+KEYBOARD_DATASET_PATH: str = "../dataset/keyboard"
+CAN_DATASET_PATH: str = "../dataset/can"
+COMBINED_DATASET_PATH: str = "../dataset/combined"
 
 # data yaml
 MOUSE_DATA_YAML = os.path.join(MOUSE_DATASET_PATH, "data.yaml")
@@ -14,16 +14,16 @@ CAN_DATA_YAML = os.path.join(CAN_DATASET_PATH, "data.yaml")
 COMBINED_DATA_YAML = os.path.join(COMBINED_DATASET_PATH, "data.yaml")
 
 # model
-MOUSE_MODEL_NAME = "mouse_detection_v1"
-KEYBOARD_MODEL_NAME = "keyboard_detection_v1"
-CAN_MODEL_NAME = "can_detection_v1"
-COMBINED_MODEL_NAME = "combined_detection_v1"
+MOUSE_MODEL_NAME: str = "mouse_detection_v1"
+KEYBOARD_MODEL_NAME: str = "keyboard_detection_v1"
+CAN_MODEL_NAME: str = "can_detection_v1"
+COMBINED_MODEL_NAME: str = "combined_detection_v1"
 
 # device configuration
-DEVICE = (
+DEVICE: str = (
     "cuda" if torch.cuda.is_available() else
     "mps" if torch.mps.is_available() else
-    "xps" if torch.xpu.is_available() else
+    "xpu" if torch.xpu.is_available() else
     "cpu"
 )
 
