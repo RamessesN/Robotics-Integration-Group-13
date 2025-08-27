@@ -4,10 +4,10 @@ train: ./train/images
 val: ./valid/images
 test: ./test/images
 
-# Category
+# Category: 0-mouse 1-keyboard 2-bottle
 nc: 3
 names: ['mouse', 'keyboard', 'bottle']
 
 # description: combination dataset of `mouse`, `keyboard` and `bottle`
-# version: 1.0
+# version: 1.1
 # date: 2025-08-27
