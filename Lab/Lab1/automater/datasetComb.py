@@ -3,12 +3,12 @@ import random
 import shutil
 
 # Original Folder
-images_dir = "../dataset/keyboard/train/images"
-labels_dir = "../dataset/keyboard/train/labels"
+images_dir = "../dataset/mouse/train/images"
+labels_dir = "../dataset/mouse/train/labels"
 
 # Combined Folder
-images_new_dir = "../dataset/combined/train/images"
-labels_new_dir = "../dataset/combined/train/labels"
+images_new_dir = "/Users/stanley/Downloads/images"
+labels_new_dir = "/Users/stanley/Downloads/labels"
 
 # Get the name of the file
 images_files = {os.path.splitext(f)[0]: f for f in os.listdir(images_dir) if os.path.isfile(os.path.join(images_dir, f))}
