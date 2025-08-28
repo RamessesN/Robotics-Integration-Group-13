@@ -31,4 +31,4 @@ DEVICE: str = (
 MOUSE_BEST_MODEL_PATH = os.path.join("weight", "mouse.pt") # mouse
 CAN_BEST_MODEL_PATH = os.path.join("weight", "can.pt") # can
 KEYBOARD_BEST_MODEL_PATH = os.path.join("weight", "keyboard.pt") # keyboard
-COMBINED_BEST_MODEL_PATH = os.path.join("weight", "combined.pt") # combination(mouse & can & keyboard)
+COMBINED_BEST_MODEL_PATH = os.path.join("weight", "combined_v1.pt") # combination(mouse & can & keyboard)
