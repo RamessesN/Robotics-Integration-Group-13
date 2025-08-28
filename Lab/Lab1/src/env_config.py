@@ -23,6 +23,7 @@ COMBINED_MODEL_NAME: str = "combined_detection_v1"
 DEVICE: str = (
     "cuda" if torch.cuda.is_available() else
     "mps" if torch.mps.is_available() else
+    "xpu" if torch.xpu.is_available() else
     "cpu"
 )
 
