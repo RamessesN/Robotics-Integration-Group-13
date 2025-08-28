@@ -212,3 +212,8 @@ __marimo__/
 # idea
 /.idea/.gitignore
 /.idea/vcs.xml
+/.idea/Robotics-Integration-Group-13.iml
+/.idea/modules.xml
+/.idea/inspectionProfiles/profiles_settings.xml
+/.idea/misc.xml
+/Lab/Lab1/dataset/combined/valid/labels.cache
