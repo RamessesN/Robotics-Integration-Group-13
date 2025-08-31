@@ -46,7 +46,7 @@ save_period = 10</code>
 > **Command Line Operation**
 1. `Yolov8` -> `onnx`
 <pre>
-<code>python3 -m ultralytics export \
+<code>yolo export \
 model=weight/xxx.pt \
 format=onnx \
 imgsz=640 \
