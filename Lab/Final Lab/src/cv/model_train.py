@@ -8,12 +8,12 @@ def train_model():
 
     results = model.train(
         data = COLA_DATA_YAML,                # Dataset configuration file
-        epochs = 130,                         # Number of training rounds
+        epochs = 200,                         # Number of training rounds
         imgsz = 640,                          # Size of the training image
-        batch = 96,                           # ADJUST WITH VRAM
+        batch = 16,                           # ADJUST WITH VRAM
         name = COLA_MODEL_NAME,               # Model name
         device = DEVICE,                      # Running device
-        workers = 4,                          # ADJUST WITH CORE NUM
+        workers = 2,                          # ADJUST WITH CORE NUM
         project = "./runs/train_cola",        # Save model
         exist_ok = False                      # Overwrite same name experiment
     )

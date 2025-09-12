@@ -11,10 +11,10 @@ prev_time = 0
 running = True
 fps_list = []
 
-model = YOLO("../cv/mlmodel/pt/cola_v1.pt")
+model = YOLO("../cv/mlmodel/pt/cola_v2.pt")
 
 def yolo_predict(frame):
-    global prev_time
+    global prev_time, target_x
 
     results = model(frame, conf=0.25, device=cfg.DEVICE, verbose=False)
     annotated = results[0].plot()
@@ -28,6 +28,10 @@ def yolo_predict(frame):
         box = results[0].boxes[0] # 取置信度最高的目标
         x1, y1, x2, y2 = map(int, box.xyxy[0])
         target_x = (x1 + x2) // 2
+        if target_x < 10 or target_x > 630:
+            target_x = None
+    else:
+        target_x = None
 
     if target_x is not None:
         cv2.circle(annotated, (target_x, height // 2), 5, (0, 255, 255), -1)
