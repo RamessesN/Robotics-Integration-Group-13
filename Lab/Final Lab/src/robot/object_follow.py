@@ -14,8 +14,8 @@ def chassis_ctrl(ep_chassis, ep_arm):
     lost_target_count = 0
 
     while vc.running:
-        if ac.gripper_closed and ac.arm_lifted:
-            ep_chassis.drive_wheels(w1 = 0, w2 = 0, w3 = 0, w4 = 0)
+        if ac.gripper_closed:
+            chassis_stop(ep_chassis)
             time.sleep(0.1)
             continue
 
@@ -33,7 +33,7 @@ def chassis_ctrl(ep_chassis, ep_arm):
 
         if state == "TRACKING":
             if vc.target_x is None:
-                ep_chassis.drive_wheels(w1 = 0, w2 = 0, w3 = 0, w4 = 0)
+                chassis_stop(ep_chassis)
                 time.sleep(0.01)
                 continue
 
@@ -43,7 +43,7 @@ def chassis_ctrl(ep_chassis, ep_arm):
             distance = current_distance if current_distance is not None else 8848
 
             if abs(error_x) < 40 and (10 < distance < 45):
-                ep_chassis.drive_wheels(w1 = 0, w2 = 0, w3 = 0, w4 = 0)
+                chassis_stop(ep_chassis)
             else:
                 turn_speed = pid_x(error_x)
                 forward_speed = -pid_z(distance)
@@ -59,11 +59,14 @@ def chassis_ctrl(ep_chassis, ep_arm):
                 ep_chassis.drive_wheels(w1, w2, w3, w4)
 
         elif state == "LOST":
-            ep_chassis.drive_wheels(w1 = 0, w2 = 0, w3 = 0, w4 = 0)
+            chassis_stop(ep_chassis)
 
             if lost_target_count == 10:
                 ep_arm.move(x = 30, y = 150).wait_for_completed()
 
         time.sleep(0.02)
 
+    chassis_stop(ep_chassis)
+
+def chassis_stop(ep_chassis):
     ep_chassis.drive_wheels(w1 = 0, w2 = 0, w3 = 0, w4 = 0)

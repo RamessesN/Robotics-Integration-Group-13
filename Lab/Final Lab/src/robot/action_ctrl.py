@@ -1,48 +1,83 @@
 import time
+import video_capture as vc
 from collections import deque
+from simple_pid import PID
 
-target_lost = False
+pid_y = PID(0.5, 0.01, 0.05, setpoint = 150)
+pid_y.output_limits = (-40, 40)
+
 gripper_closed = False
-arm_lifted = False
 latest_distance: float | None = None
-gripper_status: str | None = None # opened / closed / normal
+gripper_status: str | None = None    # opened-张开; closed-闭合; normal-中间
+
+pos_x, pos_y = 0, 0
+last_pos_x, last_pos_y = None, None
+stable_counter = 0
+
+base_x = 2
+Kp_x = 0.4
+ARM_X_MAX = 50
 
 def arm_ctrl(ep_arm):
     """
     Controls the robot arm
     :param ep_arm: the object of the robot arm
     """
-    global gripper_closed, arm_lifted
+    global pos_x, pos_y, last_pos_x, last_pos_y
 
-    last_gripper_state = False
+    ep_arm.sub_position(freq = 5, callback = sub_data_handler_arm)
 
-    while not arm_lifted:
-        if gripper_closed and not last_gripper_state and not arm_lifted:
-            ep_arm.move(x = 50, y = 150).wait_for_completed()
-            arm_lifted = True
+    previous_x, previous_y = None, None
 
-        last_gripper_state = gripper_closed
+    while True:
+        if not vc.running or vc.target_y is None:
+            time.sleep(0.02)
+            continue
+
+        error_y = vc.target_y
+        y_move = pid_y(error_y)
+        if abs(y_move) < 0.2: # 滤掉干扰
+            y_move = 0
+
+        x_move = base_x + Kp_x * abs(y_move)
+        if x_move > ARM_X_MAX:
+            x_move = ARM_X_MAX
+
+        if previous_x is not None and previous_y is not None:
+            if abs(x_move - previous_x) <= 0.5 and abs(y_move - previous_y) <= 0.5:
+                time.sleep(0.02)
+                continue
+
+        ep_arm.move(y = y_move).wait_for_completed()
+
+        previous_x, previous_y = x_move, y_move
+        last_pos_x, last_pos_y = pos_x, pos_y
+
         time.sleep(0.05)
+
+def sub_data_handler_arm(sub_info):
+    """
+    Callback function to receive data from the arm sensor
+    """
+    global pos_x, pos_y
+    pos_x, pos_y = sub_info
 
 def gripper_ctrl(ep_gripper):
     """
     Controls the robot gripper
     :param ep_gripper: the object of the robot gripper
     """
-    global gripper_closed, target_lost
+    global gripper_closed
 
     ep_gripper.sub_status(freq = 5, callback = sub_data_handler_gripper)
-    dist_queue = deque(maxlen = 10) # 连续帧记录
+    dist_queue = deque(maxlen = 15) # 连续帧记录
 
     while not gripper_closed:
-        if target_lost:
-            ep_gripper.open()
-            time.sleep(0.1)
-            continue
+        if latest_distance is not None:
+            in_grasp_range = 15 <= latest_distance <= 45
+            dist_queue.append(in_grasp_range)
 
-        if latest_distance is not None and latest_distance >= 13:
-            dist_queue.append(latest_distance < 46)
-            if len(dist_queue) == 10 and all(dist_queue): # 连续15帧距离数据都小于阈值时触发
+            if len(dist_queue) == 15 and all(dist_queue): # 连续15帧距离数据都小于阈值时触发
                 ep_gripper.close()
                 timeout = 0
                 while gripper_status != "closed" and timeout < 20:

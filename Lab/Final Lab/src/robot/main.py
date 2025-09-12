@@ -15,9 +15,6 @@ def main():
     ep_sensor = ep_robot.sensor
     ep_chassis = ep_robot.chassis
 
-    ep_arm.move(x = 30, y = 150).wait_for_completed()
-    ep_arm.move(x = -5, y = -60).wait_for_completed()
-
     ep_gripper.open() # 机械爪初始化：张开
     time.sleep(3)
 
