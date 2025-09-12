@@ -26,7 +26,7 @@ def main():
     thread1.start()
 
     thread2 = threading.Thread( # 底盘运动控制在子线程2
-        target = chassis_ctrl, args = (ep_chassis, ep_arm), daemon = True
+        target = chassis_ctrl, args = (ep_chassis,), daemon = True
     )
     thread2.start()
 

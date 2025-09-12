@@ -3,10 +3,11 @@ import video_capture as vc
 from collections import deque
 from simple_pid import PID
 
-pid_y = PID(0.5, 0.01, 0.05, setpoint = 150)
-pid_y.output_limits = (-40, 40)
+pid_y = PID(0.2, 0.01, 0.05, setpoint = 180)
+pid_y.output_limits = (-25, 25)
 
 gripper_closed = False
+lift_request = False
 latest_distance: float | None = None
 gripper_status: str | None = None    # opened-张开; closed-闭合; normal-中间
 
@@ -14,44 +15,42 @@ pos_x, pos_y = 0, 0
 last_pos_x, last_pos_y = None, None
 stable_counter = 0
 
-base_x = 2
-Kp_x = 0.4
-ARM_X_MAX = 50
-
 def arm_ctrl(ep_arm):
     """
     Controls the robot arm
     :param ep_arm: the object of the robot arm
     """
-    global pos_x, pos_y, last_pos_x, last_pos_y
+    global pos_y, last_pos_y, gripper_closed, lift_request
 
     ep_arm.sub_position(freq = 5, callback = sub_data_handler_arm)
 
-    previous_x, previous_y = None, None
+    previous_y = None
+    offset = 360 // 10
 
     while True:
+        if gripper_closed and lift_request:
+            print("WTF!!! LIFT REQUEST DETECTED")
+            ep_arm.move(y = 100).wait_for_completed()
+            lift_request = False
+            continue
+
         if not vc.running or vc.target_y is None:
             time.sleep(0.02)
             continue
 
-        error_y = vc.target_y
+        error_y = vc.target_y + offset
         y_move = pid_y(error_y)
-        if abs(y_move) < 0.2: # 滤掉干扰
+        if abs(y_move) < 2: # 滤掉干扰
             y_move = 0
 
-        x_move = base_x + Kp_x * abs(y_move)
-        if x_move > ARM_X_MAX:
-            x_move = ARM_X_MAX
-
-        if previous_x is not None and previous_y is not None:
-            if abs(x_move - previous_x) <= 0.5 and abs(y_move - previous_y) <= 0.5:
+        if previous_y and abs(y_move - previous_y) <= 0.5:
                 time.sleep(0.02)
-                continue
+                # continue
 
         ep_arm.move(y = y_move).wait_for_completed()
 
-        previous_x, previous_y = x_move, y_move
-        last_pos_x, last_pos_y = pos_x, pos_y
+        previous_y = y_move
+        last_pos_y = pos_y
 
         time.sleep(0.05)
 
@@ -67,14 +66,14 @@ def gripper_ctrl(ep_gripper):
     Controls the robot gripper
     :param ep_gripper: the object of the robot gripper
     """
-    global gripper_closed
+    global gripper_closed, lift_request
 
     ep_gripper.sub_status(freq = 5, callback = sub_data_handler_gripper)
     dist_queue = deque(maxlen = 15) # 连续帧记录
 
     while not gripper_closed:
         if latest_distance is not None:
-            in_grasp_range = 15 <= latest_distance <= 45
+            in_grasp_range = 5 <= latest_distance <= 46
             dist_queue.append(in_grasp_range)
 
             if len(dist_queue) == 15 and all(dist_queue): # 连续15帧距离数据都小于阈值时触发
@@ -85,6 +84,7 @@ def gripper_ctrl(ep_gripper):
                     timeout += 1
                 if gripper_status == "closed":
                     gripper_closed = True
+                    lift_request = True
                 break
 
         time.sleep(0.05)
