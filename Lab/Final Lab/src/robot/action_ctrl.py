@@ -9,11 +9,14 @@ pid_y.output_limits = (-50, 50)
 gripper_closed_event = threading.Event()
 gripper_closed = False # 判断是否夹住物体
 
+arm_lifted_event = threading.Event()
+arm_lifted = False # 判断是否抬起机械臂
+
 latest_distance: float | None = None # 距离测量
 gripper_status: str | None = None # opened-张开; closed-闭合; normal-中间
 
 pos_x, pos_y = 0, 0
-last_pos_x, last_pos_y = None, None
+last_pos_x = None
 stable_counter = 0
 
 def arm_ctrl(ep_arm):
@@ -21,7 +24,7 @@ def arm_ctrl(ep_arm):
     Controls the robot arm
     :param ep_arm: the object of the robot arm
     """
-    global pos_x, pos_y, last_pos_y, gripper_closed
+    global pos_x, pos_y, gripper_closed, arm_lifted
 
     ep_arm.sub_position(freq = 20, callback = sub_data_handler_arm)
 
@@ -29,29 +32,28 @@ def arm_ctrl(ep_arm):
     offset = 360 // 5 # 抓取位置修正
 
     while not gripper_closed_event.is_set():
-        if not vc.running or vc.target_y is None:
-            time.sleep(0.02)
-            continue
+        if vc.running and vc.target_y is not None:
+            error_y = vc.target_y - offset # 上负下正
+            y_move = pid_y(error_y)
+            if abs(y_move) < 2: # 滤掉干扰
+                y_move = 0
 
-        error_y = vc.target_y - offset # 上负下正
-        y_move = pid_y(error_y)
-        if abs(y_move) < 2: # 滤掉干扰
-            y_move = 0
+            if previous_y and abs(y_move - previous_y) <= 0.5:
+                time.sleep(0.02)
+                continue
 
-        if previous_y and abs(y_move - previous_y) <= 0.5:
-            time.sleep(0.02)
-            continue
+            x_move = max(200, pos_x) # 保证横向机械臂不会碰到前壳
+            ep_arm.move(x = x_move, y = y_move)
 
-        x_move = max(200, pos_x) # 保证横向机械臂不会碰到前壳
-
-        ep_arm.move(x = x_move, y = y_move)
-
-        previous_y = y_move
-        last_pos_y = pos_y
+            previous_y = y_move
 
         time.sleep(0.05)
 
     ep_arm.moveto(x = 170, y = 150).wait_for_completed()
+    arm_lifted_event.set()
+
+    while True:
+        time.sleep(1)
 
 def sub_data_handler_arm(sub_info):
     """

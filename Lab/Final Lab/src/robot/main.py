@@ -13,6 +13,7 @@ def main():
     ep_gripper = ep_robot.gripper
     ep_sensor = ep_robot.sensor
     ep_chassis = ep_robot.chassis
+    ep_vision = ep_robot.vision
 
     ep_gripper.open() # 初始化机械爪状态 - 张开
     time.sleep(3)
@@ -22,7 +23,7 @@ def main():
     vc.running = True
 
     thread1 = threading.Thread( # 帧采集在子线程1
-        target = vc.video_capture, args = (ep_camera,), daemon = True
+        target = vc.video_capture, args = (ep_camera, ep_vision), daemon = True
     )
     thread1.start()
 

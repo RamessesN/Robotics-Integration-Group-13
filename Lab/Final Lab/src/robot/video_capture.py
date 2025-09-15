@@ -1,11 +1,15 @@
 import cv2, time
+import numpy as np
 import action_ctrl as ac
+import marker_config as mc
 from env_import import *
+from typing import Optional
 from ultralytics import YOLO
 from robomaster_ultra import camera
 
-latest_frame = None
-annotated_frame = None
+latest_frame: Optional[np.ndarray] = None
+annotated_frame: Optional[np.ndarray] = None
+
 target_x = None
 target_y = None
 prev_time = 0
@@ -41,7 +45,7 @@ def yolo_predict(frame):
     cv2.line(annotated, (0, height // 2), (width, height // 2), (255, 255, 255), 1)
 
     if target_x is not None and target_y is not None:
-        cv2.circle(annotated, (target_x, target_y), 5, (0, 255, 255), -1)
+        cv2.circle(annotated, (target_x, target_y), 5, (255, 0, 0), -1)
 
     current_time = time.time()
     fps = 1.0 / (current_time - prev_time) if prev_time > 0 else 0
@@ -71,9 +75,10 @@ def yolo_predict(frame):
 
     return annotated, target_x, target_y
 
-def video_capture(ep_camera):
+def video_capture(ep_camera, ep_vision):
     global latest_frame, annotated_frame, target_x, target_y, running
 
+    ep_vision.sub_detect_info(name = "marker", callback = mc.sub_data_handler_vision)
     ep_camera.start_video_stream(display = False, resolution = camera.STREAM_360P)
 
     while running:
@@ -81,3 +86,18 @@ def video_capture(ep_camera):
         if img is not None:
             latest_frame = img
             annotated_frame, target_x, target_y = yolo_predict(img)
+
+            if mc.closest_marker is not None:
+                _, y1 = mc.closest_marker.pt1
+                center_x, center_y = mc.closest_marker.center
+
+                cv2.rectangle(
+                    annotated_frame, mc.closest_marker.pt1, mc.closest_marker.pt2, (0, 255, 0), 2
+                )
+                cv2.circle(
+                    annotated_frame, (center_x, center_y), 5, (0, 255, 0), -1
+                )
+                cv2.putText(
+                    annotated_frame, f"Marker {mc.closest_marker.info}", (center_x - 30, max(0, y1 - 5)),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2
+                )
