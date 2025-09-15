@@ -1,5 +1,6 @@
 import time, threading
 import video_capture as vc
+import object_follow as of
 from collections import deque
 from simple_pid import PID
 
@@ -11,6 +12,9 @@ gripper_closed = False # 判断是否夹住物体
 
 arm_lifted_event = threading.Event()
 arm_lifted = False # 判断是否抬起机械臂
+
+arm_lowered_event = threading.Event()
+arm_lowered = False  # 判断机械臂是否放下
 
 latest_distance: float | None = None # 距离测量
 gripper_status: str | None = None # opened-张开; closed-闭合; normal-中间
@@ -49,11 +53,15 @@ def arm_ctrl(ep_arm):
 
         time.sleep(0.05)
 
-    ep_arm.moveto(x = 170, y = 150).wait_for_completed()
+    ep_arm.moveto(x = 170, y = 150)
+    time.sleep(2)
     arm_lifted_event.set()
 
-    while True:
-        time.sleep(1)
+    of.marker_closed_event.wait() # 等待标签靠近
+
+    ep_arm.moveto(x = 190, y = 10)
+    time.sleep(1)
+    arm_lowered_event.set()
 
 def sub_data_handler_arm(sub_info):
     """
@@ -91,6 +99,10 @@ def gripper_ctrl(ep_gripper):
                     break
 
         time.sleep(0.05)
+
+    arm_lowered_event.wait() # 等待机械臂放下
+    ep_gripper.open()
+    time.sleep(3)
 
 def sub_data_handler_gripper(sub_info):
     """

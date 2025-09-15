@@ -88,7 +88,7 @@ def video_capture(ep_camera, ep_vision):
             annotated_frame, target_x, target_y = yolo_predict(img)
 
             if mc.closest_marker is not None:
-                _, y1 = mc.closest_marker.pt1
+                x1, y1 = mc.closest_marker.pt1
                 center_x, center_y = mc.closest_marker.center
 
                 cv2.rectangle(

@@ -1,4 +1,4 @@
-import threading, cv2
+import cv2
 from object_follow import *
 from robomaster_ultra import robot
 
@@ -27,13 +27,13 @@ def main():
     )
     thread1.start()
 
-    thread2 = threading.Thread( # 底盘运动控制在子线程2
-        target = chassis_ctrl, args = (ep_chassis,), daemon = True
+    thread2 = threading.Thread(  # 机械臂控制在子线程2
+        target=ac.arm_ctrl, args=(ep_arm,), daemon=True
     )
     thread2.start()
 
-    thread3 = threading.Thread( # 机械臂控制在子线程3
-        target = ac.arm_ctrl, args = (ep_arm,), daemon = True
+    thread3 = threading.Thread( # 底盘运动控制在子线程3
+        target = chassis_ctrl, args = (ep_chassis,), daemon = True
     )
     thread3.start()
 
