@@ -7,14 +7,9 @@ from simple_pid import PID
 pid_y = PID(0.5, 0, 0.03, setpoint = 180)
 pid_y.output_limits = (-50, 50)
 
-gripper_closed_event = threading.Event()
-gripper_closed = False # 判断是否夹住物体
-
-arm_lifted_event = threading.Event()
-arm_lifted = False # 判断是否抬起机械臂
-
-arm_lowered_event = threading.Event()
-arm_lowered = False  # 判断机械臂是否放下
+gripper_closed_event = threading.Event() # 判断是否夹住物体
+arm_lifted_event = threading.Event() # 判断是否抬起机械臂
+arm_lowered_event = threading.Event() # 判断机械臂是否放下
 
 latest_distance: float | None = None # 距离测量
 gripper_status: str | None = None # opened-张开; closed-闭合; normal-中间
@@ -28,7 +23,7 @@ def arm_ctrl(ep_arm):
     Controls the robot arm
     :param ep_arm: the object of the robot arm
     """
-    global pos_x, pos_y, gripper_closed, arm_lifted
+    global pos_x, pos_y
 
     ep_arm.sub_position(freq = 20, callback = sub_data_handler_arm)
 

@@ -13,8 +13,7 @@ pid_z.output_limits = (-40, 40)
 pid_z_area = PID(0.5, 0, 0, setpoint = 13) # (marker) 靠近
 pid_z_area.output_limits = (-40, 40)
 
-marker_closed_event = threading.Event()
-marker_closed = False # 判断是否靠近marker
+marker_closed_event = threading.Event() # 判断是否靠近marker
 
 frame_width = 640
 current_target = "object"
@@ -55,7 +54,7 @@ def pid_chassis(ep_chassis, status):
         current_distance = ac.latest_distance
         distance = current_distance if current_distance is not None else 8848
 
-        if distance <= 75:
+        if distance <= 70:
             chassis_stop(ep_chassis)
             return
 
