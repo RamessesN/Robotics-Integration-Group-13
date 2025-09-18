@@ -19,4 +19,4 @@ DEVICE: str = (
 )
 
 # result model (weight file)
-COLA_BEST_MODEL_PATH: str = "../cv/mlmodel/pt/cola_v1.pt"
+COLA_BEST_MODEL_PATH: str = "mlmodel/pt/cola_v1.pt"
