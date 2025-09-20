@@ -38,7 +38,7 @@ class MarkerInfo:
 
 def sub_data_handler_vision(sub_info):
     """
-    Callback function to receive data from the vision module
+    Callback Function to Receive Data from the Vision Module
     :param sub_info: markers from the view
     """
     global markers
@@ -48,6 +48,11 @@ def sub_data_handler_vision(sub_info):
         markers.append(marker)
 
 def get_specified_marker(target: str | None):
+    """
+    Subscribe Specified Marker by its `info`
+    :param target: the info of the target
+    :return: the marker with the specified info
+    """
     if target is None:
         return None
     for marker in markers:

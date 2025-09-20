@@ -1,4 +1,4 @@
-import time, threading
+from Lab.Final_Lab.src.robot.env_import import *
 
 gripper_status: str | None = None # opened-张开; closed-闭合; normal-中间
 
@@ -7,7 +7,7 @@ gripper_opened_event = threading.Event() # 判断是否松开物体
 
 def gripper_ctrl(ep_gripper, status):
     """
-    Controls the robot gripper
+    Controls the Robot Gripper
     :param ep_gripper: the object of the robot gripper
     :param status: closed / opened
     """
@@ -33,7 +33,7 @@ def gripper_ctrl(ep_gripper, status):
 
 def sub_data_handler_gripper(sub_info):
     """
-    Callback function to receive the data from the gripper
+    Callback Function to Receive the Data from the Gripper Sensor
     :param sub_info: the status of the gripper
     """
     global gripper_status

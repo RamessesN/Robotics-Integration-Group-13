@@ -1,9 +1,4 @@
-import threading, time
-import arm_ctrl as ac
-import video_capture as vc
-import marker_config as mc
-import distance_sub as ds
-from simple_pid import PID
+from Lab.Final_Lab.src.robot.env_import import *
 
 pid_x = PID(0.3, 0, 0.03, setpoint = 0)  # (object) 居中
 pid_x.output_limits = (-50, 50)
@@ -22,7 +17,7 @@ current_target: str | None = None
 
 def chassis_ctrl(ep_chassis):
     """
-    Control the Chassis to close to the Target
+    Control the Chassis to approach the Target
     :param ep_chassis: the object of the robot chassis
     """
     global current_target

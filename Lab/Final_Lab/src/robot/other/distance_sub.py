@@ -1,5 +1,4 @@
-import threading
-from collections import deque
+from Lab.Final_Lab.src.robot.env_import import *
 
 latest_distance: float | None = None
 target_closed_event = threading.Event() # 判断是否靠近物体
@@ -7,14 +6,14 @@ dist_queue = deque(maxlen=15)  # 连续帧记录
 
 def get_distance(ep_sensor):
     """
-    Subscribe the distance information from the distance sensor
+    Subscribe the Distance Information from the Distance Sensor
     :param ep_sensor: the object of the distance sensor
     """
     ep_sensor.sub_distance(freq=20, callback=sub_data_handler_distance)
 
 def sub_data_handler_distance(sub_info):
     """
-    Callback function to receive the data from the distance sensor
+    Callback Function to Receive the Data from the Distance Sensor
     :param sub_info: the distance info from the distance sensor
     """
     global latest_distance

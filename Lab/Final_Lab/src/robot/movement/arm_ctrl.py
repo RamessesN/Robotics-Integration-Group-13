@@ -1,7 +1,4 @@
-import time, threading
-import video_capture as vc
-import gripper_ctrl as gc
-from simple_pid import PID
+from Lab.Final_Lab.src.robot.env_import import *
 
 pid_y = PID(0.5, 0, 0.03, setpoint=180)
 pid_y.output_limits = (-50, 50)
@@ -60,7 +57,7 @@ def arm_ctrl(ep_arm, status):
 
 def sub_data_handler_arm(sub_info):
     """
-    Callback function to receive data from the arm sensor
+    Callback Function to Receive Data from the Arm Sensor
     """
     global pos_x, pos_y
     pos_x, pos_y = sub_info
