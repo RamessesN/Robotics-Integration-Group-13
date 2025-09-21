@@ -12,26 +12,31 @@ def gripper_ctrl(ep_gripper, status):
     :param status: closed / opened
     """
     ep_gripper.sub_status(freq = 10, callback = sub_data_handler_gripper)
+    time.sleep(0.05)
 
-    timeout = 0
+    global gripper_status
 
     if status == "close":
+        gripper_closed_event.clear()
         ep_gripper.close()
         time.sleep(3)
-        while gripper_status != "closed" and timeout < 20:
-            time.sleep(0.1)
-            timeout += 1
-        if gripper_status == "closed":
-            gripper_closed_event.set() # `抓住目标`事件设置
+        previous_time = time.time()
+        while gripper_status != "closed":
+            if time.time() - previous_time >= 5:
+                break
+            time.sleep(0.01)
+        gripper_closed_event.set() # `抓住目标`事件设置
 
     elif status == "open":
+        gripper_opened_event.clear()
         ep_gripper.open()
         time.sleep(3)
-        while gripper_status != "opened" and timeout < 20:
-            time.sleep(0.1)
-            timeout += 1
-        if gripper_status == "opened":
-            gripper_opened_event.set() # `松开目标`事件设置
+        previous_time = time.time()
+        while gripper_status != "opened":
+            if time.time() - previous_time >= 5:
+                break
+            time.sleep(0.01)
+        gripper_opened_event.set() # `松开目标`事件设置
 
 def sub_data_handler_gripper(sub_info):
     """

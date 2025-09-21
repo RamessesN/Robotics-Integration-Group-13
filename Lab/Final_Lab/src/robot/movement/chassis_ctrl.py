@@ -57,7 +57,7 @@ def pid_chassis(ep_chassis, target: str | None = None):
         current_distance = ds.latest_distance
         distance = current_distance if current_distance is not None else 8848
 
-        if distance <= 70:
+        if distance <= 65:
             chassis_stop(ep_chassis)
             return
 
@@ -91,7 +91,7 @@ def search_marker(ep_chassis, target: str | None = None):
     :param target: the target marker
     :return: whether the specified marker is found
     """
-    rotate_speed = 30
+    rotate_speed = 35
     rotated_angle = 0
     counter = 0
 

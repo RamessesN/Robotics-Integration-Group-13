@@ -20,11 +20,6 @@ def main():
     ep_chassis = ep_robot.chassis
     ep_vision = ep_robot.vision
 
-    # 机器人初始化
-    ep_gripper.open() # 初始化机械爪状态 - 张开
-    time.sleep(3)
-    ep_arm.moveto(x = 180, y = 110).wait_for_completed()  # 初始化机械臂状态 - 实测(x: 180, y: 110)视野广
-
     Thread1 = threading.Thread( # 视频采集在子线程1
         target = vc.video_capture, args = (ep_camera, ep_vision), daemon = True
     )

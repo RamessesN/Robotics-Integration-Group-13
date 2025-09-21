@@ -3,7 +3,7 @@ import threading
 
 latest_distance: float | None = None
 target_closed_event = threading.Event() # 判断是否靠近物体
-dist_queue = deque(maxlen = 15) # 连续帧记录
+dist_queue = deque(maxlen = 10) # 连续帧记录
 
 def get_distance(ep_sensor):
     """
@@ -23,5 +23,5 @@ def sub_data_handler_distance(sub_info):
     in_grasp_range = latest_distance <= 50
     dist_queue.append(in_grasp_range)
 
-    if len(dist_queue) == 15 and all(dist_queue): # 连续15帧距离数据都小于阈值时触发
+    if len(dist_queue) == 10 and all(dist_queue): # 连续10帧距离数据都小于阈值时触发
         target_closed_event.set() # `靠近目标`事件设置
