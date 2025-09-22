@@ -48,12 +48,15 @@ def workflow(current_state, ep_chassis, ep_gripper, ep_arm):
     elif current_state == states["Object_Grabbing"]:
         gc.gripper_closed_event.clear()
         gc.gripper_ctrl(ep_gripper, "close")
+        time.sleep(3)
         gc.gripper_closed_event.wait()
         return states["Object_Lifting"]
 
     elif current_state == states["Object_Lifting"]:
         ac.arm_lifted_event.clear()
+        cc.chassis_stop(ep_chassis)
         ac.arm_ctrl(ep_arm, "lift")
+        time.sleep(4)
         ac.arm_lifted_event.wait()
         return states["End_Marker_Searching"]
 
@@ -73,12 +76,14 @@ def workflow(current_state, ep_chassis, ep_gripper, ep_arm):
     elif current_state == states["Object_Lowering"]:
         ac.arm_lowered_event.clear()
         ac.arm_ctrl(ep_arm, "lower")
+        time.sleep(4)
         ac.arm_lowered_event.wait()
         return states["Object_Releasing"]
 
     elif current_state == states["Object_Releasing"]:
         gc.gripper_opened_event.clear()
         gc.gripper_ctrl(ep_gripper, "open")
+        time.sleep(3)
         gc.gripper_opened_event.wait()
         return states["Object_Away"]
 

@@ -19,10 +19,9 @@ def gripper_ctrl(ep_gripper, status):
     if status == "close":
         gripper_closed_event.clear()
         ep_gripper.close()
-        time.sleep(3)
         previous_time = time.time()
         while gripper_status != "closed":
-            if time.time() - previous_time >= 5:
+            if time.time() - previous_time >= 6:
                 break
             time.sleep(0.01)
         gripper_closed_event.set() # `抓住目标`事件设置
@@ -30,10 +29,9 @@ def gripper_ctrl(ep_gripper, status):
     elif status == "open":
         gripper_opened_event.clear()
         ep_gripper.open()
-        time.sleep(3)
         previous_time = time.time()
         while gripper_status != "opened":
-            if time.time() - previous_time >= 5:
+            if time.time() - previous_time >= 6:
                 break
             time.sleep(0.01)
         gripper_opened_event.set() # `松开目标`事件设置

@@ -31,7 +31,7 @@ def main():
     Thread2.start()
 
     Thread3 = threading.Thread( # 动作控制线程在子线程3
-        target = wf.action_ctrl, args = (ep_chassis, ep_arm, ep_gripper,), daemon = True
+        target = wf.action_ctrl, args = (ep_chassis, ep_arm, ep_gripper,)
     )
     Thread3.start()
 

@@ -91,7 +91,7 @@ def search_marker(ep_chassis, target: str | None = None):
     :param target: the target marker
     :return: whether the specified marker is found
     """
-    rotate_speed = 35
+    rotate_speed = 45
     rotated_angle = 0
     counter = 0
 

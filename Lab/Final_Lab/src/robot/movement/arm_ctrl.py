@@ -46,12 +46,12 @@ def arm_ctrl(ep_arm, status):
             time.sleep(0.05)
 
     elif status == "lift":
-        ep_arm.moveto(x = 170, y = 150)
+        ep_arm.moveto(y = 160)
         time.sleep(2)
         arm_lifted_event.set() # `抬起机械臂`事件设置
 
     elif status == "lower":
-        ep_arm.moveto(x = 190, y = 10)
+        ep_arm.moveto(x = 190, y = 15)
         time.sleep(2)
         arm_lowered_event.set() # `降下机械臂`事件设置
 
