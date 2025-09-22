@@ -35,18 +35,18 @@ We group achieves the goal of robot (robomaster) automatically detect, grab and 
 
 ## III. Struct of the Project
 ### 1. Mainbody Struct
-<pre><code>
-Final_Lab/
+<pre>
+<code>Final_Lab/
 ├── src/
 │   ├── cv/
 │   │   └── ...
 │   └── robot/
 │       └── ...
-└── README.md
-</code></pre>
+└── README.md</code>
+</pre>
 
 ### 2. Submodule Struct
-<details>
+<details open>
 <summary> Model Training Part </summary>
 <pre>
 <code>cv/
@@ -69,7 +69,7 @@ Final_Lab/
 </pre>
 </details>
 
-<details>
+<details open>
 <summary> Robot Control Part </summary>
 <pre>
 <code>robot/
