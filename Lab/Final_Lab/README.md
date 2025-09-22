@@ -42,6 +42,7 @@ We group achieves the goal of robot (robomaster) automatically detect, grab and 
 │   │   └── ...
 │   └── robot/
 │       └── ...
+├── LICENSE.txt
 └── README.md</code>
 </pre>
 
