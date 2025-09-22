@@ -162,7 +162,7 @@ and to realize the project structure that can easily modify the process.
 Therefore, we added some `time.sleep()` to increase the robustness of the robot in processing information, which causes robot to "look like" it has a high latency.
 - Even though `multi-thread` of python is constrained by `GIL` from `CPython`, it still rarely causes `High-Concurrency`.
 
-#### ⚠️ License: 该项目非开源. 详见 [LICENSE](./LICENSE.txt).
+#### ⚠️ License: This project isn't open-source. See Details [LICENSE](./LICENSE.txt).
 
 ---
 
