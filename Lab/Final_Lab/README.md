@@ -27,14 +27,8 @@ We group achieves the goal of robot (robomaster) automatically detect, grab and 
 ---
 
 ## II. Results Show
-1. Screen Recording
 <p align="center">
     <img src="./doc/video/Screenshot.gif" width=600 alt="Screenshot">
-</p>
-
-2. Live Video
-<p align="center">
-    <img src="./doc/video/Live.gif" width=250 alt="Live">
 </p>
 
 ---
