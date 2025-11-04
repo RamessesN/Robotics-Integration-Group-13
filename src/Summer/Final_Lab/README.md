@@ -3,7 +3,7 @@
     <h2> Final Project </h2>
 </div>
 
-<img src="../../doc/img/ouc.png" alt="ouc_alt" title="ouc_img">
+<img src="../../../doc/img/ouc.png" alt="ouc_alt" title="ouc_img">
 
 <div align="center">
     <h3> Team ID: #13 </h3>
@@ -163,4 +163,4 @@ Therefore, we added some `time.sleep()` to increase the robustness of the robot 
 
 ---
 
-<img src="../../doc/img/ouc2.png" alt="ouc2_alt" title="ouc2_img">
+<img src="../../../doc/img/ouc2.png" alt="ouc2_alt" title="ouc2_img">
